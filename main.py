@@ -1,5 +1,5 @@
 import pygame
-
+import random
 from constants import *
 from circleshape import *
 from player import *
@@ -49,7 +49,7 @@ def main():
         for thing in asteroids_group:
             for bullet in shots_group:
                 if thing.collision_check(bullet) == True:
-                    thing.kill()
+                    thing.split()
                     bullet.kill()
 
 
