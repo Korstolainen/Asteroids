@@ -2,6 +2,9 @@ import pygame
 from constants import *
 from circleshape import *
 from player import *
+from asteroid import *
+from asteroidfield import *
+import sys
 
 def main():
     pygame.init()
@@ -9,11 +12,16 @@ def main():
     dt = 0
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-
+    asteroids_group = pygame.sprite.Group()
     updatable_group = pygame.sprite.Group()
     drawable_group = pygame.sprite.Group()
+
+    AsteroidField.containers = updatable_group
     Player.containers = (updatable_group, drawable_group)
+    Asteroid.containers = (updatable_group, drawable_group, asteroids_group)
+
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PLAYER_RADIUS)
+    asteroid_field = AsteroidField()
 
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
@@ -28,6 +36,12 @@ def main():
         screen.fill((0, 0, 0))
 
         updatable_group.update(dt)  #updating all updatable objects
+
+        for thing in asteroids_group:
+            if thing.collision_check(player) == True:
+                print("Game Over!")
+                sys.exit()
+
 
         for thing in drawable_group:    #drawing all drawable objects. has to do this trought for loop since Group.draw() requires a sprite, which objects in the groupd dont have.
             thing.draw(screen)
